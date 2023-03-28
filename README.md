@@ -26,7 +26,7 @@ For this example, we will use a FastAPI project named "sample-fastapi-project" a
 ```
   $  pip install -r requiements.txt
   
-  $ pip freeze > requiements.txt
+  $  pip freeze > requiements.txt
 ```
 
 ## Step 4 - Add Mangum to the FastAPI code:
@@ -40,85 +40,80 @@ Import the Mangum module in your FastAPI code:
 
 Wrap the FastAPI app with Mangum:
 ```
+  app = FastAPI()
   handler = Mangum(app)
 ```
 
 Mangum allows us to wrap the API with a handler that we will package and deploy as a Lambda function in AWS.
 
+![Alt Text](mangum_configuration.png)
+
 
 ## Step 5 - Create a separate requirements package zip file
 ```
-  $ pip3 install -r requirements.txt -t ./packages
-  $ cd packages
-  $ zip -r9 ../requirements.zip .
+  $  pip3 install -r requirements.txt -t ./packages
+  $  cd packages
+  $  zip -r9 ../requirements.zip .
 ```
 This will create a seperate requirements.zip file
 
-## Step 6 - Navigate to http://localhost:8000/ to view the Django welcome screen. Kill the server once done by pressing ctrl+z.
+## Step 6 - Create a code-only zip file
 
-## Step 7 - Let's edit 'ALLOWED_HOST' in settings.py file as shown in image below:
+Create a separate zip file containing only your project's code, including the "main.py" file. Name this file "sample-fastapi.zip".
 
-![create_A_record](../images/allowed_host.png)
+```
+  # if all the code is in main.py file, then
+  $  zip sample-fastapi.zip main.py
+  
+  # Add other files to created zip if required
+  $  zip sample-fastapi.zip -u python_file.py
+  
+```
 
-## Step 8 - In this step, you will edit database connection settings for postgresql in settings.py file present into your django project. First, import os module and change the following lines in settings.py file as shown in image below:
+## Step 7 - Upload the requirements package and code-only zip files to S3(sample-fastapi-s3):
 
-![create_A_record](../images/database-settings.png)
+1. Go to the s3 bucket and click on upload icon to uplaod both files directly. 
+
+![Alt Text](add_both_requiremnets_code.png)
+
+
+## Step 8 - Create a new Lambda function:
+
+Navigate to the Lambda service in the AWS Console and click "Create function". Select "Author from scratch" and enter "sample-fastapi-lambda" as the function name. Choose "Python 3.7" as the runtime.
+ 
+ ![Alt Text](add_create_lambda_image.png)
     
 
-## Step 9 - Now, you will create a requirements.txt file in your project's root directory. Use below command to automatically create a requirements.txt and copy all dependencies in it.
-```
-  $ pip freeze > requirements.txt
-```
+## Step 9 - Add the requirements package as a Lambda layer:
 
-## Step 10 - In this step, you will create a Dockerfile in your project's root directory and add the following lines as shown in image below.
+In the Lambda function page, navigate to the "Layers" section and click "Add a layer". Choose "Upload a .zip file" and select the "requirements.zip" file that you uploaded to S3 in Step 7. Enter a name for the layer and click "Create".
 
-![create_A_record](../images/dockerfile.png)
+ ![Alt Text](add_requiremnets_layer.png)
 
-## Step 11 - Let's create a docker-compose.yml file in project's root directory and add the following lines in it:
-```
-  services:
-  postgres:
-    image: postgres:latest
-    ports:
-      - "5432:5432"
-    environment:
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=password
-      - DB_NAME=myproject_db
-      
-  web:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - ./myproject:/code
-    ports:
-      - "8000:8000"
-    environment:
-      - DB_NAME=myproject_db
-      - DB_HOST=postgresql
-      - DB_PORT=5432
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=password
-    depends_on:
-      - postgres
-  
-  migration:
-    build: .
-    command: python manage.py migrate --noinput
-    volumes:
-      - ./myproject:/code
-    environment:
-      - DB_NAME=myproject_db
-      - DB_HOST=postgresql
-      - DB_PORT=5432
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=password
-    depends_on:
-      - postgres
-```
-	In docker-compose.yml file, you define your services to be served inside your docker container with specific syntax which docker will use to read and manage execution of defined services. In above file, following services have been defined:
 
-## Step 12 - Finally, Run your django app using below command:
-```
-docker compose up --build
-```
+## Step 10 - Add the code-only zip file to the Lambda function:
+
+In the Lambda function page, navigate to the "Function code" section and choose "Upload a .zip file" under "Code source". Select the "sample-fastapi.zip" file that you created in Step 6.
+
+ ![Alt Text](add_code_to_lambda.png)
+
+
+## Step 11 - Set the Lambda function handler:
+
+1.In the Lambda function page, scroll down to the "Runtime settings" section and set the handler name to "main.handler".
+2. It will execute handler function under main.py file.
+3. Check Step-4 for reference.
+
+
+## Step 12 - Configure the Lambda function:
+#### In the Lambda function page, navigate to the "Configuration" section and under "General configuration" set the following parameters:
+
+1. Memory (RAM): 1024 MB
+2. Timeout: 5 minutes
+
+#### Click on "Environment variables" 
+1. Set any environment variables required by your FastAPI project
+
+#### In the Lambda function page, scroll down to the "Layers" and click "Add layer".
+1. Add the requirements package layer that you created in Step 9
+
