@@ -1,45 +1,59 @@
-# How to Dockerize a Django Application
+# Deploying a FastAPI project on AWS Lambda
 
 ## Introduction
-In this tutorial, you will dockerize a django application using Docker container. Docker is an open platform for developing, shipping, and running applications. Docker provides the ability to package and run an application in a isolated environment called a container.
-Containers are lightweight and contain everything needed to run your application, so you do not need to rely on what is currently installed on the host.
+This guide outlines the steps required to deploy a FastAPI project on AWS Lambda using a separate requirements package and code-only zip file.
 
 ## Prerequisites:
 
-You need following things to start work:
-1. Python3 installed
-2. Docker installed
-3. Postgresql installed
+Before you begin, you will need the following:
 
-## Step 1 — Create a virtual environment to isolate our app dependencies. On windows machine, you can install virtualenv module to create virtual environment and on linux, you can use venv module. I am using venv here to create a virtual environment on my linux machine.
+1. A sample FastAPI project
+2. An AWS account with access to AWS Lambda and S3 services to deploy code
+
+For this example, we will use a FastAPI project named "sample-fastapi-project" and an S3 bucket named "sample-fastapi-s3". We will also create an AWS Lambda function named "sample-fastapi-lambda".
+
+## Step 1 — Create a virtual environment to isolate our app dependencies. 
 ```
-  $  python -m venv venv/
+  $  python3 -m venv venv/
 ```
 
-## Step 2 - A folder named venv will be ceated on the location where you ran above command. Let's activate the environment, type:
+## Step 2 - Activate the environment:
 ```
   $  source venv/bin/activate
 ```
 
-## Step 3 - Now that you are inside your virtual environment, let’s install dependencies that are required for this project:
+## Step 3 - Install dependencies that are required for this project:
 ```
-  $  pip install django psycopg2-binary
+  $  pip install -r requiements.txt
+  
+  $ pip freeze > requiements.txt
 ```
 
-    Django is the framework that you will be using to develop your web app using python and psycopg2-binary is the python module which works as a adapter between postgresql and django.
+## Step 4 - Add Mangum to the FastAPI code:
+```
+  $ pip install mangum
+```
+Import the Mangum module in your FastAPI code:
+```
+  from mangum import Mangum
+```
 
-## Step 4 - In this step, you will start a new django project by using following command.
+Wrap the FastAPI app with Mangum:
 ```
-  $ django-admin startproject myproject
+  handler = Mangum(app)
 ```
-    Now your project directory should look like this:
 
-![create_A_record](../images/django-project.png)
+Mangum allows us to wrap the API with a handler that we will package and deploy as a Lambda function in AWS.
 
-## Step 5 - To test your application locally, First enter your project directory and run the following command.
+
+## Step 5 - Create a separate requirements package zip file
 ```
-  $ python manage.py runserver
+  $ pip3 install -r requirements.txt -t ./packages
+  $ cd packages
+  $ zip -r9 ../requirements.zip .
 ```
+This will create a seperate requirements.zip file
+
 ## Step 6 - Navigate to http://localhost:8000/ to view the Django welcome screen. Kill the server once done by pressing ctrl+z.
 
 ## Step 7 - Let's edit 'ALLOWED_HOST' in settings.py file as shown in image below:
