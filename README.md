@@ -109,7 +109,8 @@ In the Lambda function page, navigate to the "Function code" section and choose 
 #### In the Lambda function page, navigate to the "Configuration" section and under "General configuration" set the following parameters:
 
 1. Memory (RAM): 1024 MB
-2. Timeout: 5 minutes
+2. Memory (ROM): 512 MB
+3. Timeout: 1 minute
 
 #### Click on "Environment variables" 
  Set any environment variables required by your FastAPI project
