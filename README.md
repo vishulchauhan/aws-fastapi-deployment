@@ -66,7 +66,7 @@ Create a separate zip file containing only your project's code, including the "m
   $  zip sample-fastapi.zip main.py
   
   # Add other files to created zip if required
-  $  zip sample-fastapi.zip -u python_file.py
+  $  zip sample-fastapi.zip -u <python_file>
   
 ```
 
@@ -86,14 +86,14 @@ Navigate to the Lambda service in the AWS Console and click "Create function". S
 
 ## Step 9 - Add the requirements package as a Lambda layer:
 
-In the Lambda function page, navigate to the "Layers" section and click "Add a layer". Choose "Upload a .zip file" and select the "requirements.zip" file that you uploaded to S3 in Step 7. Enter a name for the layer and click "Create".
+In the Lambda function page, navigate to the "Layers" section and click "Add a layer" > "Layers" > "create layer". Choose "Upload a file from Amazon S3" and copy the "S3 URI" of the "requirements.zip" file that you uploaded to S3 in Step 7. Enter a name for the layer and click "Create".
 
  ![Alt Text](add_requiremnets_layer.png)
 
 
 ## Step 10 - Add the code-only zip file to the Lambda function:
 
-In the Lambda function page, navigate to the "Function code" section and choose "Upload a .zip file" under "Code source". Select the "sample-fastapi.zip" file that you created in Step 6.
+In the Lambda function page, navigate to the "Function code" section and choose Upload from "Amazon S3 location" under "Code source". Copy the "S3 ULI" of "sample-fastapi.zip" file that you uploaded to S3 in Step 7.
 
  ![Alt Text](add_code_to_lambda.png)
 
@@ -112,8 +112,22 @@ In the Lambda function page, navigate to the "Function code" section and choose 
 2. Timeout: 5 minutes
 
 #### Click on "Environment variables" 
-1. Set any environment variables required by your FastAPI project
+ Set any environment variables required by your FastAPI project
 
 #### In the Lambda function page, scroll down to the "Layers" and click "Add layer".
-1. Add the requirements package layer that you created in Step 9
+ Add the requirements package layer that you created in Step 9
+
+#### Add Function URL
+ 1. In the Lambda function page, navigate to the "Configuration" section and under "Function URL", Click "Create function url"
+ 2. Set "Auth type" as "None".
+ 3. Click Save
+ 
+ ## Step 13 - Test the Lambda function:
+  In the Lambda function page, Copy "Function Url" and test your function over browser. You should see the output from your FastAPI project's APIs.
+  
+   ![Alt Text](final_swagger_page.png)
+
+  
+Congratulations! You have successfully deployed a FastAPI project on AWS Lambda.
+ 
 
