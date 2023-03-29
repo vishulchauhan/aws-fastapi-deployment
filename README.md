@@ -118,7 +118,7 @@ In the Lambda function page, navigate to the `Function code` section and choose 
  Set any environment variables required by your FastAPI project
 
 #### In the Lambda function page, scroll down to the `Layers` > `Add layer`.
- 1. Select`custom layers` in ``layer source
+ 1. Select`custom layers` in `layer source`
  2. Add the requirements package layer that you created in Step 9
  3. Choose `Version` and Click `Add`
  
