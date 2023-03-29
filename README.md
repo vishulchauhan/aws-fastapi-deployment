@@ -26,12 +26,14 @@ For this example, we will use a FastAPI project named `sample-fastapi-project` a
 ```
   $  pip install -r requiements.txt
   
-  $  pip freeze > requiements.txt
 ```
 
 ## Step 4 - Add Mangum to the FastAPI code:
-```
+```  
   $ pip install mangum
+  
+  $ pip freeze > requiements.txt
+
 ```
 Import the Mangum module in your FastAPI code:
 ```
@@ -46,7 +48,7 @@ Wrap the FastAPI app with Mangum:
 
 Mangum allows us to wrap the API with a handler that we will package and deploy as a Lambda function in AWS.
 
-![Alt Text](mangum_configuration.png)
+![Alt Text](images/mangum_configuration.png)
 
 
 ## Step 5 - Create a separate requirements package zip file
@@ -74,33 +76,33 @@ Create a separate zip file containing only your project's code, including the `m
 
 1. Go to the s3 bucket and click on upload icon to uplaod both files directly. 
 
-![Alt Text](../images/add_both_requiremnets_code.png)
+![Alt Text](images/add_both_requiremnets_code.png)
 
 
 ## Step 8 - Create a new Lambda function:
 
 Navigate to the Lambda service in the AWS Console and click `Create function`. Select `Author from scratch` and enter `sample-fastapi-lambda` as the function name. Choose `Python 3.7` as the runtime.
  
- ![Alt Text](add_create_lambda_image.png)
+ ![Alt Text](images/add_create_lambda_image.png)
     
 
 ## Step 9 - Add the requirements package as a Lambda layer:
 
 In the Lambda function page, navigate to the `Layers` section and click `Add a layer` > `Layers` > `create layer`. Choose `Upload a file from Amazon S3` and copy the `S3 URI` of the `requirements.zip` file that you uploaded to S3 in Step 7. Enter a name for the layer and click `Create`.
 
- ![Alt Text](add_requiremnets_layer.png)
+ ![Alt Text](images/add_requiremnets_layer.png)
 
 
 ## Step 10 - Add the code-only zip file to the Lambda function:
 
 In the Lambda function page, navigate to the `Function code` section and choose Upload from `Amazon S3 location` under `Code source`. Copy the `S3 ULI` of `sample-fastapi.zip` file that you uploaded to S3 in Step 7.
 
- ![Alt Text](add_code_to_lambda.png)
+ ![Alt Text](images/add_code_to_lambda.png)
 
 
 ## Step 11 - Set the Lambda function handler:
 
-1.In the Lambda function page, scroll down to the `Runtime settings` section and set the handler name to `main.handler`.
+1. In the Lambda function page, scroll down to the `Runtime settings` section and set the handler name to `main.handler`.
 2. It will execute handler function under main.py file.
 3. Check Step-4 for reference.
 
@@ -115,8 +117,13 @@ In the Lambda function page, navigate to the `Function code` section and choose 
 #### Click on `Environment variables` 
  Set any environment variables required by your FastAPI project
 
-#### In the Lambda function page, scroll down to the `Layers` and click `Add layer`.
- Add the requirements package layer that you created in Step 9
+#### In the Lambda function page, scroll down to the `Layers` > `Add layer`.
+ 1. Select`custom layers` in ``layer source
+ 2. Add the requirements package layer that you created in Step 9
+ 3. Choose `Version` and Click `Add`
+ 
+    ![Alt Text](images/add_requiremnet_layer.png)
+
 
 #### Add Function URL
  1. In the Lambda function page, navigate to the `Configuration` section and under `Function URL`, Click `Create function url`
@@ -130,7 +137,7 @@ In the Lambda function page, navigate to the `Function code` section and choose 
   You should see the output from your FastAPI project's APIs.
   
   
-   ![Alt Text](final_swagger_page.png)
+   ![Alt Text](images/final_swagger_page.png)
 
   
 Congratulations! You have successfully deployed a FastAPI project on AWS Lambda.
