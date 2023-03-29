@@ -74,7 +74,7 @@ Create a separate zip file containing only your project's code, including the `m
 
 1. Go to the s3 bucket and click on upload icon to uplaod both files directly. 
 
-![Alt Text](add_both_requiremnets_code.png)
+![Alt Text](../images/add_both_requiremnets_code.png)
 
 
 ## Step 8 - Create a new Lambda function:
