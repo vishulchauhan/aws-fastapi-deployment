@@ -18,8 +18,13 @@ For this example, we will use a FastAPI project named `sample-fastapi-project` a
 ```
 
 ## Step 2 - Activate the environment:
+
 ```
+  # In Linux, type 
   $  source venv/bin/activate
+  
+  # In Windows, type 
+  $ .\venv\Scrips\activate
 ```
 
 ## Step 3 - Install dependencies that are required for this project:
@@ -74,28 +79,36 @@ Create a separate zip file containing only your project's code, including the `m
 
 ## Step 7 - Upload the requirements package and code-only zip files to S3(sample-fastapi-s3):
 
-1. Go to the s3 bucket and click on upload icon to uplaod both files directly. 
+ Go to the s3 bucket and click on upload icon to uplaod both files directly. 
 
 ![Alt Text](images/add_both_requiremnets_code.png)
 
 
 ## Step 8 - Create a new Lambda function:
 
-Navigate to the Lambda service in the AWS Console and click `Create function`. Select `Author from scratch` and enter `sample-fastapi-lambda` as the function name. Choose `Python 3.7` as the runtime.
+ 1. Navigate to the Lambda service in the AWS Console and click `Create function`. 
+ 2. Select `Author from scratch` and enter `sample-fastapi-lambda` as the function name. 
+ 3. Choose `Python 3.7` as the runtime.
+ 4. If having existing role then under `Change default execution role` Choose `Execution role` as `Use an existing role` and select the role
+ 5. Otherwise Choose `Create a new role with basic Lambda permissions` and Click `create function`
  
  ![Alt Text](images/add_create_lambda_image.png)
     
 
 ## Step 9 - Add the requirements package as a Lambda layer:
 
-In the Lambda function page, navigate to the `Layers` section and click `Add a layer` > `Layers` > `create layer`. Choose `Upload a file from Amazon S3` and copy the `S3 URI` of the `requirements.zip` file that you uploaded to S3 in Step 7. Enter a name for the layer and click `Create`.
+1. In the Lambda function page, navigate to the `Layers` section and click `Add a layer` > `Layers` > `create layer`. 
+2. Choose `Upload a file from Amazon S3` and copy the `S3 URI` of the `requirements.zip` file that you uploaded to S3 in Step 7. 
+3. Enter a name for the layer and click `Create`.
 
  ![Alt Text](images/add_requiremnets_layer.png)
 
 
 ## Step 10 - Add the code-only zip file to the Lambda function:
 
-In the Lambda function page, navigate to the `Function code` section and choose Upload from `Amazon S3 location` under `Code source`. Copy the `S3 ULI` of `sample-fastapi.zip` file that you uploaded to S3 in Step 7.
+1. In the Lambda function page, navigate to the `Function code` section and choose Upload from `Amazon S3 location` under `Code source`. 
+2. Copy the `S3 ULI` of `sample-fastapi.zip` file that you uploaded to S3 in Step 7.
+3. Click `Save`
 
  ![Alt Text](images/add_code_to_lambda.png)
 
@@ -119,7 +132,7 @@ In the Lambda function page, navigate to the `Function code` section and choose 
 
 #### In the Lambda function page, scroll down to the `Layers` > `Add layer`.
  1. Select`custom layers` in `layer source`
- 2. Add the requirements package layer that you created in Step 9
+ 2. Add the `requirements-package` to layer that you created in Step 9
  3. Choose `Version` and Click `Add`
  
     ![Alt Text](images/add_requiremnet_layer.png)
