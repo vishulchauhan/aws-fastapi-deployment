@@ -140,6 +140,6 @@ In the Lambda function page, navigate to the `Function code` section and choose 
    ![Alt Text](images/final_swagger_page.png)
 
   
-Congratulations! You have successfully deployed a FastAPI project on AWS Lambda.
+## Congratulations! You have successfully deployed a FastAPI project on AWS Lambda.
  
 
